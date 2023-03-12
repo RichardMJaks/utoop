@@ -44,7 +44,9 @@ public class OOPFunctions {
      * Generates a random number between 1000 inclusive and 2000 exclusive
      * @return int
      */
-    static public int randInt() {return (int) (1000 + Math.random() * 1000);}
+    static public int randInt1k2k() {return (int) (1000 + Math.random() * 1000);}
+
+    static public int randInt(int startInc, int endExc) {return (int) (startInc + Math.random() * (endExc - startInc));}
 
     static public void GenerateRandomNumberFiles(long randomRange, long amount, String fileName, String delimiter) throws IOException {
         File myFile = new File(fileName);
@@ -53,49 +55,6 @@ public class OOPFunctions {
         for (int i = 0; i < amount; i++)
             writer.append((long) (Math.random() * randomRange) + delimiter);
     }
-
-    //region dice rolls
-    /**
-     * Rolls a d20
-     * @return d20 roll
-     */
-    static public int d20() {return (int) (1 + Math.random() * 21);}
-
-    /**
-     * Rolls a d12
-     * @return d12 roll
-     */
-    static public int d12() {return (int) (1 + Math.random() * 13);}
-
-    /**
-     * Rolls a d10
-     * @return d10 roll
-     */
-    static public int d10() {return (int) (1 + Math.random() * 11);}
-
-    /**
-     * Rolls a d8
-     * @return d8 roll
-     */
-    static public int d8() {return (int) (1 + Math.random() * 9);}
-
-    /**
-     * Rolls a d6
-     * @return d6 roll
-     */
-    static public int d6() {return (int) (1 + Math.random() * 7);}
-
-    /**
-     * Rolls a d4
-     * @return d4 roll
-     */
-    static public int d4() {return (int) (1 + Math.random() * 5);}
-
-    /**
-     * Flips a coin
-     * @return d2 roll
-     */
-    static public int d2() {return (int) (1 + Math.random() * 3);}
 
     /**
      * Rolls a die

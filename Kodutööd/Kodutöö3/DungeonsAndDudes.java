@@ -18,8 +18,8 @@ public class DungeonsAndDudes {
         System.out.printf("The %s and the %s got into an argument about who has the better fighting stick.%n", dueler1, dueler2);
         System.out.printf("After they compared their %s and %s and found out that neither knew how to judge the other's stick, to prove once and for all that one has the better stick, they decided to fight to death.%n", dueler1.weapon(), dueler2.weapon());
 
-        int dueler1Roll = OOPFunctions.d20();
-        int dueler2Roll = OOPFunctions.d20();
+        int dueler1Roll = OOPFunctions.rollDice("1d20");
+        int dueler2Roll = OOPFunctions.rollDice("1d20");
         int dueler1Total = dueler1Roll + dueler1.getDexterity();
         int dueler2Total = dueler2Roll + dueler2.getDexterity();
 

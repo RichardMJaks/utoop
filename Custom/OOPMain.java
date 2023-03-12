@@ -3,6 +3,9 @@ package Custom;
 
 import java.io.IOException;
 
+/**
+ * This class is to be used for methods and functions which do not make sense to be used in a homework file
+ */
 public class OOPMain {
     public static void main(String[] args) throws IOException {
         for (int i = 30; i < 100; i++)

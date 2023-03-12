@@ -31,7 +31,7 @@ public abstract class Dude {
             System.out.printf("%s uses %s on %s%n", this, chosenEffect, (attackTarget == this) ? "themself" : attackTarget);
 
             // Roll
-            int roll = OOPFunctions.d20();
+            int roll = OOPFunctions.rollDice("1d20");
             int rollTotal = roll + this.accuracy;
             System.out.printf("%s rolled %s, for a total of %s%n", this, roll, rollTotal);
 
