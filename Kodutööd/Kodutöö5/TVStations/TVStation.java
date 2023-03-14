@@ -6,7 +6,6 @@ import java.util.List;
 
 public class TVStation extends Broadcaster {
     private List<String> newsList;
-    List<BroadcastListener> listeners = new ArrayList<>();
     public TVStation (List<String> news) {
         this.newsList = news;
     }

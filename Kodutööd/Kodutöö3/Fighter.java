@@ -20,22 +20,13 @@ public class Fighter extends Dude {
 
     // Constructor
     public Fighter() {
-        this.accuracy = 2;
-        this.armor = 17;
-        this.health = 20;
-        this.actionPointRecovery = 2;
-        this.actionPoints = 2;
-        this.maxAP = 4;
-
-        this.dexterity = 3; // Added for choosing attack order
-
-        this.afflictedEffects = new ArrayList<>();
+        super(2, 17, 20, 2, 2, 4, 3);
     }
 
     @Override
     Effect chooseEffect() {
-        if (this.health < 10) return new Enrage();
-        if (this.actionPoints > 1 && !this.hasKnockedDown) {
+        if (this.getHealth() < 10) return new Enrage();
+        if (this.getActionPoints() > 1 && !this.hasKnockedDown) {
             this.hasKnockedDown = true;
             return new Knockdown();
         }

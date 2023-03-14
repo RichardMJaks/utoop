@@ -2,6 +2,8 @@ package Kodutööd.Kodutöö4.EchoServer;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.InvalidParameterException;
 
 import static Kodutööd.Kodutöö4.EchoServer.Codes.*;
@@ -52,7 +54,9 @@ public class Client {
             out.writeInt(args.length / 2);
 
             for (int i = 1; i < args.length; i += 2) {
-                int requestType = getRequestType(args[i - 1]);
+                int requestType;
+                try {requestType = getRequestType(args[i - 1]);}
+                catch (InvalidParameterException e) { continue; } // Go to next arg if this arg isn't valid
                 out.writeInt(requestType); // Send action type
                 out.writeUTF(args[i]); // Send content
 
@@ -62,15 +66,9 @@ public class Client {
                         if (requestType == REQUEST_TYPE_FILE) {
                             int byteArrayLength = in.readInt();
                             byte[] answer = in.readNBytes(byteArrayLength); // Reading in bytes so response would be compatible with all file types (don't trust the multiple conversions)
-                            File file = new File("recieved/" + args[i]);
-                            if (file.createNewFile()) {
-                                try (FileOutputStream fos = new FileOutputStream(file)) {
-                                    fos.write(answer);
-                                    System.out.printf("Created file named \"%s\"", args[i]);
-                                }
-                            } else {
-                                System.out.println("Had an error while creating a new file: file already exists. For safety reasons not going to overwrite it.");
-                            }
+                            if (!Files.exists(Path.of("received", args[i])))
+                                Files.write(Path.of("received", args[i]), answer);
+                            else System.out.println("File already exists. For safety not going to overwrite it.");
                         } else if (requestType == REQUEST_TYPE_ECHO) {
                             String answer = in.readUTF();
                             System.out.println("Recieved echo: " + answer);

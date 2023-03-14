@@ -19,24 +19,17 @@ public class Wizard extends Dude {
     private int deltaWebAttack = 3;
 
     public Wizard() {
-        this.accuracy = 5;
-        this.armor = 15;
-        this.health = 10;
-        this.actionPointRecovery = 1;
-        this.actionPoints = 3;
-        this.maxAP = 3;
-        this.dexterity = 5; // Added for choosing attack order
-        this.afflictedEffects = new ArrayList<>();
+        super(5, 15, 10, 3, 1, 3, 5);
     }
 
     @Override
     Effect chooseEffect() {
-        if (this.deltaWebAttack > 2 && this.actionPoints > 1) {
+        if (this.deltaWebAttack > 2 && this.getActionPoints() > 1) {
             this.deltaWebAttack = 0;
             return new Spiderweb();
         } // If previous web attack has expired and can use it again
         this.deltaWebAttack++;
-        if (this.actionPoints > 0) return new Firebolt();
+        if (this.getActionPoints() > 0) return new Firebolt();
         return new FillAbility();
     }
 

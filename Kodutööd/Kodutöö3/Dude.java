@@ -2,18 +2,32 @@ package Kodutööd.Kodutöö3;
 
 import Custom.OOPFunctions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class Dude {
-    protected int accuracy;
-    protected int armor;
-    protected int health;
-    protected int actionPoints;
-    protected int actionPointRecovery;
-    protected int maxAP;
-    protected int dexterity; // Added for choosing attack order
-    protected List<Effect> afflictedEffects; // List of afflicted effects
+    private int accuracy;
+    private int armor;
+    private int health;
+    private int actionPoints;
+    private int actionPointRecovery;
+    private int maxAP;
+    private int dexterity; // Added for choosing attack order
+    private List<Effect> afflictedEffects; // List of afflicted effects
+
+    public Dude(int accuracy, int armor, int health, int actionPoints, int actionPointRecovery, int maxAP, int dexterity) {
+        this.accuracy = accuracy;
+        this.armor = armor;
+        this.health = health;
+        this.actionPoints = actionPoints;
+        this.actionPointRecovery = actionPointRecovery;
+        this.maxAP = maxAP;
+        this.dexterity = dexterity;
+
+        this.afflictedEffects = new ArrayList<Effect>();
+    }
+
 
     public void takeTurn(Dude attackTarget) {
         // Recover action points
@@ -48,7 +62,7 @@ public abstract class Dude {
         for (Effect effect : this.afflictedEffects) effect.onTurnEnd(this);
 
         // Clear out expired effects
-        this.afflictedEffects = this.afflictedEffects.stream().filter(i -> !i.isExpired()).collect(Collectors.toList());
+        this.afflictedEffects.removeIf(Effect::isExpired);
     }
 
     public boolean isAlive() {

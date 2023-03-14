@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import static Kodutööd.Kodutöö4.EchoServer.Codes.*;
 
 public class Server {
-    private static final String fileLocation = "files/";
+    private static final String fileLocation = "files";
 
     public static void main(String[] args) throws IOException {
         try (ServerSocket ss = new ServerSocket(1337)) {
@@ -33,7 +33,7 @@ public class Server {
     }
 
     public static class ThreadedSocket implements Runnable {
-        private Socket socket;
+        private final  Socket socket;
         //private final String workingDirectory = "src/Kodutööd/Kodutöö4/EchoServer/"; This can be set in configuration menu also apparently
 
         public ThreadedSocket(Socket s) {
@@ -63,7 +63,7 @@ public class Server {
          */
         private void fileRequest(DataOutputStream out, String fileName) throws IOException {
             System.out.println("Performing file request");
-            Path filePath = Path.of(fileLocation + fileName);
+            Path filePath = Path.of(fileLocation, fileName);
             if (Files.isRegularFile(filePath) && !filePath.isAbsolute()) {
                 System.out.println("Reading all bytes of file " + fileName);
                 byte[] fileContents = Files.readAllBytes(filePath);
@@ -81,7 +81,7 @@ public class Server {
 
         @Override
         public void run() {
-            try (DataInputStream in = new DataInputStream(socket.getInputStream());
+            try (socket; DataInputStream in = new DataInputStream(socket.getInputStream());
                  DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
 
                 int expectedLength = in.readInt();

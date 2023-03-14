@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.concurrent.BlockingQueue;
 public class ParalleelArvutused {
     private static BlockingQueue<String> in;
     private static BlockingQueue<DataHolder> out;
-    private static String numbersDirectory = "Numbers/";
+    private static String numbersDirectory = "Numbers";
 
     public static void main(String[] args) throws InterruptedException {
         int processors = Runtime.getRuntime().availableProcessors();
@@ -33,15 +34,17 @@ public class ParalleelArvutused {
             t.start();
             threadList.add(t);
         }
+
+        // Got some feedback about it, but as I am working on fixing stuff during lessons like I always am, I'll leave it for later
         for (Thread tt : threadList) {
             tt.join();
         }
 
         DataHolder[] outArray = out.toArray(new DataHolder[out.size()]);
 
-        BigInteger[] sums = Arrays.stream(outArray).map(DataHolder::getSum).toArray(BigInteger[]::new);
-        BigInteger[] maxs = Arrays.stream(outArray).map(DataHolder::getMax).toArray(BigInteger[]::new);
-        String[] fileName = Arrays.stream(outArray).map(DataHolder::getFile).toArray(String[]::new);
+        BigInteger[] sums = Arrays.stream(outArray).map(i -> i.sum).toArray(BigInteger[]::new);
+        BigInteger[] maxs = Arrays.stream(outArray).map(i -> i.max).toArray(BigInteger[]::new);
+        String[] fileName = Arrays.stream(outArray).map(i -> i.file).toArray(String[]::new);
 
 
         BigInteger fullSum = Arrays.stream(sums).reduce(BigInteger::add).get(); // Get the total sum
@@ -66,35 +69,13 @@ public class ParalleelArvutused {
         int smallestSumIndex = Arrays.binarySearch(sums, minSum);
         String minSumFileName = fileName[smallestSumIndex];
 
-        System.out.println("Total sum of the numbers: " + fullSum.toString());
-        System.out.printf("Biggest number was %s and it was found in file %s%n", biggestMax.toString(), maxFileName);
+        System.out.println("Total sum of the numbers: " + fullSum);
+        System.out.printf("Biggest number was %s and it was found in file %s%n", biggestMax, maxFileName);
         System.out.println("Smallest sum was in the file " + minSumFileName);
 
     }
 
-    private static class DataHolder {
-        private String file;
-        private BigInteger max;
-        private BigInteger sum;
-
-        public DataHolder(String file, BigInteger max, BigInteger sum) {
-            this.file = file;
-            this.max = max;
-            this.sum = sum;
-        }
-
-        public String getFile() {
-            return file;
-        }
-
-        public BigInteger getMax() {
-            return max;
-        }
-
-        public BigInteger getSum() {
-            return sum;
-        }
-    }
+    private static record DataHolder (String file, BigInteger max, BigInteger sum) {}
 
     private static class Worker implements Runnable {
 
@@ -102,20 +83,18 @@ public class ParalleelArvutused {
         public void run() throws RuntimeException {
             while (true) {
                 // Initialize or reset max and sum values for next file
-                BigInteger max = BigInteger.ZERO;
-                BigInteger sum = BigInteger.ZERO;
+                BigInteger max = null;
+                BigInteger sum = null;
 
                 String fileName = in.poll();
 
                 // If there is no next file stop the cycle
                 if (fileName == null) break;
 
-                File file = new File(numbersDirectory + fileName);
-
                 // Start scanning the file
-                try (Scanner reader = new Scanner(file.toPath(), StandardCharsets.UTF_8)) {
-                    while (reader.hasNext()) { // Read until next whitespace
-                        BigInteger number = new BigInteger(reader.next());
+                try (Scanner reader = new Scanner(Path.of(numbersDirectory, fileName), StandardCharsets.UTF_8)) {
+                    while (reader.hasNextBigInteger()) { // Read until next whitespace
+                        BigInteger number = reader.nextBigInteger();
                         if (number.compareTo(max) > 0) {
                             max = number;
                         }
