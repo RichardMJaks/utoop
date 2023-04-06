@@ -36,6 +36,7 @@ public class ParalleelArvutused {
         }
 
         // Got some feedback about it, but as I am working on fixing stuff during lessons like I always am, I'll leave it for later
+        /**
         for (Thread tt : threadList) {
             tt.join();
         }
@@ -68,6 +69,17 @@ public class ParalleelArvutused {
 
         int smallestSumIndex = Arrays.binarySearch(sums, minSum);
         String minSumFileName = fileName[smallestSumIndex];
+         */
+
+        BigInteger fullSum = BigInteger.ZERO;
+        BigInteger biggestMax = null;
+        String maxFileName = "";
+        String minSumFileName = "";
+
+        while (threadList.size() > 0) {
+            DataHolder holder = out.take();
+
+        }
 
         System.out.println("Total sum of the numbers: " + fullSum);
         System.out.printf("Biggest number was %s and it was found in file %s%n", biggestMax, maxFileName);
